@@ -16,10 +16,20 @@ Pandas Dataframe 寫入 mysql 工具
 * 在Window 10上安裝wsl，並將其轉換為wsl2: https://docs.microsoft.com/zh-tw/windows/wsl/install-win10
 * 安裝mysql-server：
 ````
+# Upgrade the Repositories
 sudo apt update 
 sudo apt upgrade
+# Install MySQL
 sudo apt install mysql-server
-sudo service mysql start>
+# Start service
+sudo service mysql start
+# Check all user and their authentication 
+SELECT user, authentication_string, plugin, host FROM mysql.user
+# Alter authentication and set password for root, this procedure will prevent someone 
+# login to your mysql service if he has permissions of your root.
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
+# re-login to mysql-server with password 'password'
+mysql -u username -p
 ````
 
 
