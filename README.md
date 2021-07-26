@@ -14,7 +14,8 @@ Pandas Dataframe 寫入 mysql 工具
 
 ## Process - 安裝流程
 * 在Window 10上安裝wsl，並將其轉換為wsl2: https://docs.microsoft.com/zh-tw/windows/wsl/install-win10
-* 安裝mysql-server：
+* 安裝mysql-server：  
+
   1. Update Repositories: sudo apt update 
   2. Upgrade Repositories: sudo apt upgrade
   3. Install mysql server: sudo apt install mysql-server
