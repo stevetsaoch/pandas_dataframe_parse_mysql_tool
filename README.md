@@ -13,5 +13,6 @@ Pandas Dataframe 寫入 mysql 工具
   * mysql-connector 2.2.9
 
 ## Process - 安裝流程
+* 如何在Window 10 上安裝wsl : https://docs.microsoft.com/zh-tw/windows/wsl/install-win10
 
 # 主要功能
