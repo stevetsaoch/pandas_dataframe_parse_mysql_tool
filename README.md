@@ -19,15 +19,20 @@ Pandas Dataframe 寫入 mysql 工具
 # Upgrade the Repositories
 sudo apt update 
 sudo apt upgrade
+
 # Install MySQL
 sudo apt install mysql-server
+
 # Start service
 sudo service mysql start
+
 # Check all user and their authentication 
 SELECT user, authentication_string, plugin, host FROM mysql.user
+
 # Alter authentication and set password for root, this procedure will prevent someone 
 # login to your mysql service if he has permissions of your root.
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
+
 # re-login to mysql-server with password 'password'
 mysql -u username -p
 ````
