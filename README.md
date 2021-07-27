@@ -74,4 +74,5 @@ mysql -u username -p
 * 解析純日期格式(date) *目前只支援解析timestamp* 。
 * 支援TEXT相關格式。
 * 單筆、多筆資料更新
+* 資料庫正規化
 
