@@ -74,7 +74,7 @@ class pandas_dataframe_parse_mysql_tool():
             raise
 
     def mysql_create_table_syntax(self, table_name: str, unique_key: bool = False,
-                                  unique_col: str or list = None or []) -> 'pandas_dataframe_parse_mysql_tool':
+                                  unique_col: str or list = None) -> 'pandas_dataframe_parse_mysql_tool':
         # check if table exist
         self.table_name = table_name
         self.creat_table_syntax = f'CREATE TABLE {self.table_name}( '
@@ -91,7 +91,7 @@ class pandas_dataframe_parse_mysql_tool():
                         else:
                             self.creat_table_syntax = self.creat_table_syntax + f'{key} {self.columns_dtype[key]} UNIQUE)'
                 
-                    elif (unique_col == None or unique_col == []):
+                    elif (unique_col == None):
                         raise KeyError
                     
                     else:
@@ -111,53 +111,53 @@ class pandas_dataframe_parse_mysql_tool():
                         self.creat_table_syntax = self.creat_table_syntax + f'{key} {self.columns_dtype[key]})'
 
             except KeyError as e:
-                print('Please assign a column or list of columns.')
+                print('Please assign a column or a list of columns.')
                 break
 
         return self
 
-    def mysql_create_db_table(self, db_name: str) -> str:
+    def mysql_create_db_table(self, db_name: str):
         # check if database exist
         try:
-            mycursor = self.engine.cursor(buffered=True)
+            cursor_db_table = self.engine.cursor(buffered=True)
             # if syntax is not completed, raise error
             if self.creat_table_syntax == f'CREATE TABLE {self.table_name}( ':
                 raise SyntaxWarning
 
             else:
             # check if db exist, then create table
-                mycursor.execute(f'USE {db_name}')
-                mycursor.execute(f'SELECT * FROM {self.table_name}') # check if table exist
+                cursor_db_table.execute(f'USE {db_name}')
+                cursor_db_table.execute(f'SELECT * FROM {self.table_name}') # check if table exist
                 print(f'Table {self.table_name} exist.')
 
         except mysql.connector.errors.ProgrammingError as e:
 
             # if db not exist, create a db
             if 'Unknown database' in str(e):
-                mycursor.execute(f'CREATE DATABASE {db_name}')
-                mycursor.execute(f'USE {db_name}')
-                mycursor.execute(f'{self.creat_table_syntax}')
+                cursor_db_table.execute(f'CREATE DATABASE {db_name}')
+                cursor_db_table.execute(f'USE {db_name}')
+                cursor_db_table.execute(f'{self.creat_table_syntax}')
                 print(f'Database {db_name} and table {self.table_name} are created.')
 
             # if database exist but table not exist
             elif 'Unknown table' in str(e):
-                mycursor.execute(f'{self.creat_table_syntax}')
+                cursor_db_table.execute(f'{self.creat_table_syntax}')
                 print(f'Table {self.table_name} is created.')
 
             # if database exist but table not exist
             elif f'Table \'{db_name}.{self.table_name}\' doesn\'t exist' in str(e):
-                mycursor.execute(f'{self.creat_table_syntax}')
+                cursor_db_table.execute(f'{self.creat_table_syntax}')
                 print(f'Table {self.table_name} is created.')
         except SyntaxWarning:
             print('Create table syntax is not completed, please entry param correctly.')
 
         finally:
-            mycursor.close()
+            cursor_db_table.close()
     
     def insert_data_multi(self) -> 'pandas_dataframe_parse_mysql_tool':
         # Insert multiple record to db
         # establish cursor
-        mycursor_insert = self.engine.cursor(buffered = True)
+        cursor_insert = self.engine.cursor(buffered = True)
 
         # column and values
         col_names = self.df.keys()
@@ -170,12 +170,12 @@ class pandas_dataframe_parse_mysql_tool():
 
         try:
         # insert
-            mycursor_insert.executemany(insert_syntax, values)
+            cursor_insert.executemany(insert_syntax, values)
 
         # commit
         finally:
             self.engine.commit()
-            mycursor_insert.close()
+            cursor_insert.close()
         
         return self
 
