@@ -45,7 +45,8 @@ mysql -u username -p
 # Main Functions - 主要功能
 此工具主要分成四個部分: 
 * dtype_parse(): 解析資料，並將資料解析成果紀錄成字典，只適用於此類實例。
-* mysql_create_table_syntax(table_name, unique_key = False, unique_col = None): 根據dtype_parse結果，生成創建mysql table之語句。  
+* mysql_create_table_syntax(table_name, unique_key = False, unique_col = None):  
+根據dtype_parse結果，生成創建mysql table之語句。  
 
   * Parameters:
     * table_name: str  
