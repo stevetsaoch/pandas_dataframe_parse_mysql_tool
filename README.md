@@ -57,7 +57,7 @@ mysql -u username -p
     True: 將unique_col中str/list皆指定為UNIQUE KEY  
 
     * unique_col: str or list, default None  
-    <span style="color:blue">str: 將單一欄位指定為UNIQUE KEY  </span>
+    $\color{Green}{str: 將單一欄位指定為UNIQUE KEY}$  
     list: 將list中所有欄位指定為UNIQUE KEY
 
 * mysql_create_db_table: 創建新資料庫並建立新table。
