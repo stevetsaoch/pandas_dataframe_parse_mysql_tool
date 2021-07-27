@@ -29,8 +29,7 @@ sudo service mysql start
 # Check all user and their authentication 
 SELECT user, authentication_string, plugin, host FROM mysql.user
 
-# Alter authentication and set password for root, this procedure will prevent someone 
-# login to your mysql service if he has permissions of your root.
+# Alter authentication and set password for root
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
 
 # re-login to mysql-server with password 'password'
