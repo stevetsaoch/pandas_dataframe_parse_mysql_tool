@@ -2,7 +2,7 @@ Pandas Dataframe 寫入 mysql 工具
 ![](https://img.shields.io/badge/python-3.8-blue) ![](https://img.shields.io/badge/MySQL-8.0.25--0%20LTS-orange) ![](https://img.shields.io/badge/Ubuntu-20.04.2%20LTS-orange)
 ===============================
 # 簡介
-此專案主要目標是將Pandas的Dataframe中的資料解析過後並以儲存空間最佳的方式建立MySQL語句，且支援數據批量插入。目前支援Integer( TINYINT, SMALLINT), approximate types( float, decimal), string (VARCHAR), date/timestamp。
+此專案主要目標是將Pandas的Dataframe中的資料解析過後並以儲存空間最佳的方式建立MySQL語句，且支援數據批量插入。目前支援解析Integer to TINYINT, SMALLINT, MEDIUMINT, INT or BIGINT; approximate type to FLOAT or DOUBLE; string to VARCHAR; timestamp to DATE or TIMESTAMP。
 
 # Installation - 安裝
 ## Requirement - 開發平台與套件需求
