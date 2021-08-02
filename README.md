@@ -78,8 +78,8 @@ class pandas_dataframe_parse_mysql_tool()
 
 # Future Plans - 更新計畫
 * 新增Decimal選項，使用者能主動選擇使用Decimal或是由系統決定是否要根據資料大小用Decimal。
-* 解析純日期格式(date)
+* 解析純日期格式(date)。
 * 支援TEXT相關格式。
-* 單筆、多筆資料更新
-* 資料庫正規化
+* 單筆、多筆資料更新。
+* 資料庫正規化。
 
