@@ -49,6 +49,10 @@ mysql -u username -p
 
 
 # Main Functions - 主要功能
+````
+class pandas_dataframe_parse_mysql_tool()
+````
+
 此工具主要分成四個部分: 
 * dtype_parse(): 解析資料，並將資料解析成果紀錄成字典，只適用於此類實例。
 * mysql_create_table_syntax(table_name, unique_key = False, unique_col = None):  
