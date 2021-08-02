@@ -54,9 +54,14 @@ mysql -u username -p
 * mysql_create_table_syntax(table_name, unique_key = False, unique_col = None):  
 根據dtype_parse結果，生成創建mysql table之語句。  
 
-  * Parameters:
-    * table_name: str  
-    表格名稱  
+|Parameters|**table_name：str**|
+|:---------|:------------------|
+|          |表格名稱|
+|          |**unique_key：bool, default=False**|
+|          |:------------------|
+|          |False: 沒有欄位會被指定為UNIQUE KEY  
+|          |True: 將unique_col中str/list皆指定為UNIQUE KEY  |
+
 
     * unique_key: bool, default False  
     False: 沒有欄位會被指定為UNIQUE KEY  
