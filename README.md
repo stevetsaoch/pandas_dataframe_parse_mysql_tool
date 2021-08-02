@@ -58,7 +58,7 @@ class pandas_dataframe_parse_mysql_tool()
 * mysql_create_table_syntax(table_name, unique_key = False, unique_col = None):  
 根據dtype_parse結果，生成創建mysql table之語句。  
 
-|<span style="color:red">Parameters</span>: |**table_name：str**|
+|<span style="color:blue">Parameters</span>: |**table_name：str**|
 |:---------|:------------------|
 |          |  表格名稱|
 |          |**unique_key：bool, default=False**|
