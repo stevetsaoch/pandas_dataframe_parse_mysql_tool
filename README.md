@@ -58,9 +58,8 @@ mysql -u username -p
 |:---------|:------------------|
 |          |表格名稱|
 |          |**unique_key：bool, default=False**|
-|          |:------------------|
-|          |False: 沒有欄位會被指定為UNIQUE KEY  
-|          |True: 將unique_col中str/list皆指定為UNIQUE KEY  |
+|          ||
+|          |False: 沒有欄位會被指定為UNIQUE KEY  True: 將unique_col中str/list皆指定為UNIQUE KEY  |
 
 
     * unique_key: bool, default False  
