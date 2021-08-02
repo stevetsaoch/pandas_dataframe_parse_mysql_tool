@@ -66,7 +66,7 @@ mysql -u username -p
 * mysql_create_db_table: 創建新資料庫並建立新table。
 
 |Parameters: |**db_name：str**|
-|:---------|:---------------|
+|:---------  |:---------------|
 |          |資料庫名稱，會檢查資料庫是否已經存在，若無則以此名稱創建資料庫，並創建table。|
 
 * insert_data_multi: 將padas dataframe導入mysql table。
