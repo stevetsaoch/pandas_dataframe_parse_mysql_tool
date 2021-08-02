@@ -59,7 +59,7 @@ mysql -u username -p
 |          |  表格名稱|
 |          |**unique_key：bool, default=False**|
 |          |  False: 沒有欄位會被指定為UNIQUE KEY    True: 將unique_col中str/list皆指定為UNIQUE KEY|
-|**Attributes: **|**creat_table_syntax：str**|
+|**Attributes:**|**creat_table_syntax：str**|
 |            |  創建Table的MySQL syntax。|
 
 * mysql_create_db_table: 創建新資料庫並建立新table。
