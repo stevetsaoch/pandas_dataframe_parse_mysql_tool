@@ -155,6 +155,9 @@ class pandas_dataframe_parse_mysql_tool():
             cursor_db_table.close()
     
     def insert_data_multi(self) -> 'pandas_dataframe_parse_mysql_tool':
+        # change NaN to None because mysql can't parse np.nan type 
+        self.df = self.df.where((pd.notnull(self.df)), None)
+
         # Insert multiple record to db
         # establish cursor
         cursor_insert = self.engine.cursor(buffered = True)
