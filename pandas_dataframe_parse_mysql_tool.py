@@ -37,7 +37,7 @@ class pandas_dataframe_parse_mysql_tool():
 
                 if 'int' in str(dtype_series[col]):
                     # find most space fit int type base on value
-                    max_int = max(self.df[col])
+                    max_int = self.df[col].max(skipna=True)
                     for key in self.dtype_int.keys():
                         if max_int <= max(self.dtype_int[key]):
                             self.columns_dtype.update({f'{col}': f'{key}'})
@@ -45,7 +45,7 @@ class pandas_dataframe_parse_mysql_tool():
                 
                 elif 'float' in str(dtype_series[col]):
                     # find most space fit approximate types type base on value
-                    max_float = max(self.df[col])
+                    max_float = self.df[col].max(skipna=True)
                     for key in self.dtype_decimal.keys():
                         if min(self.dtype_decimal[key]) <= max_float <= max(self.dtype_decimal[key]):
                             self.columns_dtype.update({f'{col}':key})
