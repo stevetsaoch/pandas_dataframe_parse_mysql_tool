@@ -25,6 +25,9 @@ engine = mysql.connector.connect(auth_plugin='mysql_native_password', **inf.inf)
 tool = pdsql(train_raw, engine)
 
 # data parse
+# accuracy mode
+# tool.dtype_parse(decimal_type_mode = 'accuracy', digit_num=4)
+# space_save mode
 tool.dtype_parse(decimal_type_mode = 'space_save')
 tool.mysql_create_table_syntax('train_raw', unique_key=False)
 
