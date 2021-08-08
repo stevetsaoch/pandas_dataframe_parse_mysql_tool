@@ -1,6 +1,7 @@
 # dependency package
 import mysql.connector
 import pandas as pd
+import numpy as np
 import datetime
 
 # for function annotation
@@ -21,16 +22,43 @@ class pandas_dataframe_parse_mysql_tool():
         }
         # range of approximate types
         self.dtype_decimal = {
-            'FLOAT': (-3.40e38, 3.40e38),
-            'DOUBLE': (-1.79e308, 1.79e308)
+            'DECIMAL': {'len': (0, 1, 2, 3, 4, 5, 6, 7, 8, 9), 'bytes': (0, 1, 1, 2, 2, 3, 3, 4, 4, 4)},
+            'FLOAT': {'len': 6, 'bytes': 4},
+            'DOUBLE': {'len': 16, 'bytes': 8}
         }
 
         self.df = df
         self.engine = engine
         self.columns_dtype = {} # recording columns name and dtype
+    
+    # return bytes usage of decimal type in mysql
+    def bytes_of_decimal(value: str or float, len_dig: tuple, bytes_use: tuple) -> int:
+        # change dtype of value if it's not str
+        if 'str' not in str(type(value)):
+            value = str(value)
+        
+        # get length of int and digit part
+        int_part, dig_part = value.split('.')
+        int_len, dig_len = len(int_part), len(dig_part)
+        int_bytes = 0
+        dig_bytes = 0
+
+        while int_len > 0:
+            for dig in len_dig[::-1]:
+                if int_len - dig >= 0:
+                    int_len -= dig
+                    int_bytes += bytes_use[len_dig.index(dig)]
+
+        while dig_len > 0:
+            for dig in len_dig[::-1]:
+                if dig_len - dig >= 0:
+                    dig_len -= dig
+                    dig_bytes += bytes_use[len_dig.index(dig)]
+                    
+        return int_bytes + dig_bytes
 
     # update dict with columns and dtype pair that will be used in creating mysql table syntax
-    def dtype_parse(self) -> 'pandas_dataframe_parse_mysql_tool':
+    def dtype_parse(self, decimal_type_mode: str = 'space_save', digit_num: int = 2, decimal_parse_func = bytes_of_decimal) -> 'pandas_dataframe_parse_mysql_tool':
         try:
             dtype_series = self.df.dtypes # dataframe dtypes
             for col in list(dtype_series.index):
@@ -44,12 +72,38 @@ class pandas_dataframe_parse_mysql_tool():
                             break
                 
                 elif 'float' in str(dtype_series[col]):
-                    # find most space fit approximate types type base on value
                     max_float = self.df[col].max(skipna=True)
-                    for key in self.dtype_decimal.keys():
-                        if min(self.dtype_decimal[key]) <= max_float <= max(self.dtype_decimal[key]):
-                            self.columns_dtype.update({f'{col}':key})
-                            break
+                    max_float_str_int_len = len(str(max_float).split('.')[0]) # length of int part of max value in column
+                    max_float_str_dig_len = len(str(max_float).split('.')[1]) # length of digit part of max value in column
+                    '''
+                    Two ways To define which dtype will be assigned to column:
+                    accuracy: Will use DECIMAL(M,D), digit_num is changeable
+                    space_save: Will calculate how many memory sapce need(max value of that column)
+                                for decimal with assigned digit_num. If it is higher than 4, then will
+                                consider using float or double base on integer part length. This mode will 
+                                keep all integer part and giving rest space to digit part accroding to mysql 
+                                default.
+                    '''
+                    if decimal_type_mode == 'accuracy':
+                        self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + digit_num}, {digit_num})'})
+
+                    # find most space fit approximate types type base on value
+                    elif decimal_type_mode == 'space_save':
+                        # calculate if using decimal will save more space than float and 
+                        decimal_bytes_use = decimal_parse_func(max_float, self.dtype_decimal['DECIMAL']['len'],
+                                                       self.dtype_decimal['DECIMAL']['bytes'])
+                        
+                        # use decimal if bytes use is of deciaml of is less than float or 
+                        # total length is larger than 16 which will cause uncertain with dtype of double
+                        if (decimal_bytes_use < 4) or ((max_float_str_int_len + max_float_str_dig_len) > 16):
+                            self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + max_float_str_dig_len},{max_float_str_dig_len})'})
+                        
+                        # using float or double base on length of inter part
+                        else:
+                            if max_float_str_int_len <= 6:
+                                self.columns_dtype.update({f'{col}':f'FLOAT'})
+                            else:
+                                self.columns_dtype.update({f'{col}':f'DOUBLE'})
 
                 elif 'object' in str(dtype_series[col]):
                     # using max length as length of VARCHAR
