@@ -25,10 +25,12 @@ engine = mysql.connector.connect(auth_plugin='mysql_native_password', **inf.inf)
 tool = pdsql(train_raw, engine)
 
 # data parse
-# accuracy mode
+## accuracy mode
 # tool.dtype_parse(decimal_type_mode = 'accuracy', digit_num=4)
-# space_save mode
-tool.dtype_parse(decimal_type_mode = 'space_save')
+## space_save mode
+# tool.dtype_parse(decimal_type_mode = 'space_save')
+## all_include mode
+tool.dtype_parse(decimal_type_mode = 'all_include')
 tool.mysql_create_table_syntax('train_raw', unique_key=False)
 
 # check if the syntax is correct
