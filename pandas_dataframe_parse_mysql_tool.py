@@ -93,9 +93,9 @@ class pandas_dataframe_parse_mysql_tool():
                         decimal_bytes_use = decimal_parse_func(max_float, self.dtype_decimal['DECIMAL']['len'],
                                                        self.dtype_decimal['DECIMAL']['bytes'])
                         
-                        # use decimal if bytes use of deciaml type is less than float type or 
-                        # length of integer part is larger than 16 which will cause uncertainty 
-                        # when assign data type as double
+                        # use decimal if max value of bytes use if assign deciaml type is less 
+                        # than float type or length of integer part is larger than 16 which will
+                        # cause uncertainty when assign data type as double
                         if (decimal_bytes_use < 4) or (max_float_str_int_len > 16):
                             self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + max_float_str_dig_len},{max_float_str_dig_len})'})
                         
