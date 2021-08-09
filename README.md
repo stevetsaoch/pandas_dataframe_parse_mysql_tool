@@ -58,7 +58,7 @@ class pandas_dataframe_parse_mysql_tool()
 
 |Parameters: |**decimal_type_mode: str, Default = 'space_save'**|
 |:---------|:------------------|
-|          |解析小數使用的模式，預設為儲存最佳化模式(space_save)<br>**accuracy**: 精準模式，使用DECIMAL並可以指定小數點後位數，預設位數為2 <br>**space_save**: 儲存最佳化模式，會以該行最大數為基準，分析其若為DECIMAL時所需空間大小，若大於FLOAT所需大小會選擇使用FLOAT，其他則根據整數長度決定用FLOAT或是DOUBLE<br><br>*整數長度超過DOUBLE有效位數(16)時會強制使用DECIMAL，並以 **digit_num**為小數個數*|
+|          |解析小數使用的模式，預設為儲存最佳化模式(space_save)<br>**accuracy**: 精準模式，使用DECIMAL並可以指定小數點後位數，預設位數為2 <br>**space_save**: 儲存最佳化模式，會以該行最大數為基準，分析其若為DECIMAL時所需空間大小，若大於FLOAT所需大小會選擇使用FLOAT，其他則根據整數長度決定用FLOAT或是DOUBLE<br>**all_include**: 保存原始數據所有位數，可能會消耗大量空間。<br>*整數長度超過DOUBLE有效位數(16)時會強制使用DECIMAL，並以 **digit_num**為小數個數*|
 |          |**digit_num: int, Default = 2**|
 |          |小數個數，作用於精準模式與在特殊情況下作用於儲存最佳化模式，詳見上述個模式解釋。|
 
@@ -88,5 +88,6 @@ class pandas_dataframe_parse_mysql_tool()
 * 解析純日期格式(date)。
 * 支援TEXT相關格式。
 * 單筆、多筆資料更新。
+* 小數位數過多處理。
 * 資料庫正規化。
 
