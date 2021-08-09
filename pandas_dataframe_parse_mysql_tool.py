@@ -76,34 +76,45 @@ class pandas_dataframe_parse_mysql_tool():
                     max_float_str_int_len = len(str(max_float).split('.')[0]) # length of int part of max value in column
                     max_float_str_dig_len = len(str(max_float).split('.')[1]) # length of digit part of max value in column
                     '''
-                    Two ways To define which dtype will be assigned to column:
-                    accuracy: Will use DECIMAL(M,D), digit_num is changeable
-                    space_save: Will calculate how many memory sapce need(max value of that column)
-                                for decimal with assigned digit_num. If it is higher than 4, then will
+                    Three ways to define which dtype will be assigned to column:
+                    accuracy: Using DECIMAL(M,D), digit_num is changeable
+                    space_save: Calculate how many memory sapce need before assigning decimal 
+                                to max value of that column. If it is higher than 4, then will
                                 consider using float or double base on integer part length. This mode will 
                                 keep all integer part and giving rest space to digit part accroding to mysql 
                                 default.
+                    all_include: Include all orginal data digit as possible.
                     '''
                     if decimal_type_mode == 'accuracy':
                         self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + digit_num}, {digit_num})'})
 
-                    # find most space fit approximate types type base on value
                     elif decimal_type_mode == 'space_save':
-                        # calculate if using decimal will save more space than float and 
+                        # calculate bytes use if assign data as decimal
                         decimal_bytes_use = decimal_parse_func(max_float, self.dtype_decimal['DECIMAL']['len'],
                                                        self.dtype_decimal['DECIMAL']['bytes'])
                         
-                        # use decimal if bytes use is of deciaml of is less than float or 
-                        # integer part length is larger than 16 which will cause uncertain with dtype of double
+                        # use decimal if bytes use of deciaml type is less than float type or 
+                        # length of integer part is larger than 16 which will cause uncertainty 
+                        # when assign data type as double
                         if (decimal_bytes_use < 4) or (max_float_str_int_len > 16):
-                            self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + digit_num},{digit_num})'})
+                            self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + max_float_str_dig_len},{max_float_str_dig_len})'})
                         
-                        # using float or double base on length of inter part
+                        # using float or double base on length of integer part
                         else:
                             if max_float_str_int_len <= 6:
                                 self.columns_dtype.update({f'{col}':f'FLOAT'})
                             else:
                                 self.columns_dtype.update({f'{col}':f'DOUBLE'})
+                    
+                    # all_include mode will include all orginal data digit as possible
+                    elif decimal_type_mode == 'all_include':
+                        if max_float_str_int_len + max_float_str_dig_len > 65:
+                            dig_len = 65 - max_float_str_int_len
+                            self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + dig_len},{dig_len})'}) 
+                        elif max_float_str_dig_len > 30:
+                            self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + 30},{30})'})
+                        else:
+                            self.columns_dtype.update({f'{col}':f'DECIMAL({max_float_str_int_len + max_float_str_dig_len},{max_float_str_dig_len})'})
 
                 elif 'object' in str(dtype_series[col]):
                     # using max length as length of VARCHAR
