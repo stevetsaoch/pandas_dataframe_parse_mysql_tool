@@ -110,6 +110,7 @@ mysql -u username -p
                       data_col_name: Union[str, list] = None,  
                       decimal_type_mode: str = 'space_save', digit_num: int = 2,  
                       decimal_parse_func: Callable = pandas_dataframe_parse_mysql_tool.bytes_of_decimal):  
+                      
 此方法繼承父類dtype_parse方法，並需要輸入資料庫名稱、表格名稱等參數以利插入新欄位並更新數據，參數描述請參照父類描述。
 
 
