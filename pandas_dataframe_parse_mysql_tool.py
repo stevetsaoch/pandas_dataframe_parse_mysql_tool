@@ -210,7 +210,7 @@ class pandas_dataframe_parse_mysql_tool(object):
     def mysql_create_table_syntax(self, table_name: str) -> 'pandas_dataframe_parse_mysql_tool':
         # check if table exist
         self.table_name = table_name
-        self.creat_table_syntax = f'CREATE TABLE {self.table_name}('
+        self.create_table_syntax = f'CREATE TABLE {self.table_name}('
         
         for i, key in enumerate(self.columns_dtype.keys()):
             try: 
@@ -218,17 +218,17 @@ class pandas_dataframe_parse_mysql_tool(object):
                 if i < len(self.columns_dtype.keys()) - 1:
                     
                     if key == self.unique_col:
-                        self.creat_table_syntax = self.creat_table_syntax + f'{key} {self.columns_dtype[key]} UNIQUE, '
+                        self.create_table_syntax = self.create_table_syntax + f'{key} {self.columns_dtype[key]} UNIQUE, '
                     
                     else:    
-                        self.creat_table_syntax = self.creat_table_syntax + f'{key} {self.columns_dtype[key]}, '
+                        self.create_table_syntax = self.create_table_syntax + f'{key} {self.columns_dtype[key]}, '
 
                 else:
 
                     if key == self.unique_col:
-                        self.creat_table_syntax = self.creat_table_syntax + f'{key} {self.columns_dtype[key]} UNIQUE)'
+                        self.create_table_syntax = self.create_table_syntax + f'{key} {self.columns_dtype[key]} UNIQUE)'
                     else:
-                        self.creat_table_syntax = self.creat_table_syntax + f'{key} {self.columns_dtype[key]})'
+                        self.create_table_syntax = self.create_table_syntax + f'{key} {self.columns_dtype[key]})'
 
             except KeyError as e:
                 print('Please assign a column or a list of columns.')
@@ -241,7 +241,7 @@ class pandas_dataframe_parse_mysql_tool(object):
         try:
             cursor_db_table = self.engine.cursor(buffered=True)
             # if syntax is not completed, raise error
-            if self.creat_table_syntax == f'CREATE TABLE {self.table_name}( ':
+            if self.create_table_syntax == f'CREATE TABLE {self.table_name}( ':
                 raise SyntaxWarning
 
             else:
@@ -256,17 +256,17 @@ class pandas_dataframe_parse_mysql_tool(object):
             if 'Unknown database' in str(e):
                 cursor_db_table.execute(f'CREATE DATABASE {db_name}')
                 cursor_db_table.execute(f'USE {db_name}')
-                cursor_db_table.execute(f'{self.creat_table_syntax}')
+                cursor_db_table.execute(f'{self.create_table_syntax}')
                 print(f'Database {db_name} and table {self.table_name} are created.')
 
             # if database exist but table not exist
             elif 'Unknown table' in str(e):
-                cursor_db_table.execute(f'{self.creat_table_syntax}')
+                cursor_db_table.execute(f'{self.create_table_syntax}')
                 print(f'Table {self.table_name} is created.')
 
             # if database exist but table not exist
             elif f'Table \'{db_name}.{self.table_name}\' doesn\'t exist' in str(e):
-                cursor_db_table.execute(f'{self.creat_table_syntax}')
+                cursor_db_table.execute(f'{self.create_table_syntax}')
                 print(f'Table {self.table_name} is created.')
         except SyntaxWarning:
             print('Create table syntax is not completed, please entry param correctly.')
